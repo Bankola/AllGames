@@ -25,79 +25,43 @@ void print_end_menu(int score, int total, int wins, int defeats) {
 }//work
 
 
-void start_main_game() {
-    system("pause");
-    system("cls");
-    int door_game = -1;
-    while (door_game != 1 && door_game != 2 && door_game != 3) {
+void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
+    *user_choice = -1;
+    while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 0) {
+        system("pause");
         system("cls");
-        printf("***MAIN GAME***\n");
-        printf("Welcome to my game!\n");
-        printf("Choose the door\n");
-        printf("=====  =====  =====\n"
-            "|   |  |   |  |   |\n"
-            "| 1 |  | 2 |  | 3 |\n"
-            "|   |  |   |  |   |\n"
-            "=====  =====  =====\n");
-        scanf_s("%d", &door_game);
-        switch (door_game) {
+        printf("**GAMES MENU**\n");
+        printf("1.Guess Game\n"
+            "2.Main Game\n"
+            "3.Bulls and Cows\n"
+            "4.Back\n"
+            "0.Exit\n");
+        scanf_s("%d", user_choice);
+
+        switch (*user_choice) {
         case 1:
-            printf("You died by monster!\n");
+            guess_game_menu(score, total, wins, defeats, difficult, Flag, user_choice);
             break;
         case 2:
-            printf("U find a lot of money!$$$$\n");
+            start_main_game();
             break;
         case 3:
-            printf("You find new 3 doors..\n");
-            system("pause");
-            door_game = -1;
-            while (door_game != 1 && door_game != 2 && door_game != 3 && door_game != 4) {
-                system("cls");
-                printf("=====  =====  =====\n"
-                    "|   |  |   |  |   |\n"
-                    "| 1 |  | 2 |  | 3 |\n"
-                    "|   |  |   |  |   |\n"
-                    "=====  =====  =====\n");
-                printf("Choose the door\n");
-                scanf_s("%d", &door_game);
-                switch (door_game) {
-                case 1:
-                    system("cls");
-                    printf("You find a toy\n");
-                    printf("   ___   \n"
-                        "  |   |   \n"
-                        "=========\n"
-                        "| |   | |\n"
-                        "| |   | |\n"
-                        "| |   | |\n"
-                        "+=======+\n"
-                        " |     |\n"
-                        " |     |\n"
-                        " |     |\n"
-                        "==     ==\n");
-                    break;
-                case 2:
-                    system("cls");
-                    printf("The new world\n");
-                    printf("You can go out..\n");
-                    break;
-                case 3:
-                    system("cls");
-                    printf("You find your death\n");
-                    break;
-                case 4:
-                    system("cls");
-                    printf("Secret final, your family right here.\n");
-                    break;
-                default:
-                    printf("Incorrect input\n");
-                    continue;
-                }
-            }
+            BullsCowsMenu(score, total, wins, defeats, user_choice, Flag);
+            break;
+        case 4:
+            system("cls");
+            return;
+        case 0:
+            *Flag = end_program();
             break;
         default:
-            printf("Input correct number of door\n");
+            incorrect_input();
             continue;
+        }
+
+        if (*Flag == 0) {
+            print_end_menu(*score, *total, *wins, *defeats);
+            break;
         }
     }
 }//work
@@ -260,4 +224,4 @@ void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficu
             return;
         }
     }
-}
+}//work

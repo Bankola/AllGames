@@ -123,8 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BullsAndCowsGame.c" />
     <ClCompile Include="funcs.c" />
+    <ClCompile Include="GuessGame.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="MainGame.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funcs.h" />
