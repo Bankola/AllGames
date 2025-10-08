@@ -12,7 +12,6 @@ int main() {
     int user_choice = -1;
     int Flag = 1;
     int difficult = 2; //Normal
-    int door_game = -1;
     while (user_choice != 1 && user_choice != 2 && user_choice != 0) {
         printf("**MAIN MENU**\n");
         printf("1.Play\n"
@@ -366,9 +365,7 @@ int main() {
                             Flag = end_program();
                             break;
                         default:
-                            printf("Incorrect input\n");
-                            system("pause");
-                            system("cls");
+                            incorrect_input();
                             continue;
                         }
                         if (user_choice == -1) {
@@ -381,80 +378,7 @@ int main() {
                     }
                     break;
                 case 2:
-                    system("pause");
-                    system("cls");
-                    while (door_game != 1 && door_game != 2 && door_game != 3) {
-                        system("cls");
-                        printf("***MAIN GAME***\n");
-                        printf("Welcome to my game!\n");
-                        printf("Choose the door\n");
-                        printf("=====  =====  =====\n"
-                            "|   |  |   |  |   |\n"
-                            "| 1 |  | 2 |  | 3 |\n"
-                            "|   |  |   |  |   |\n"
-                            "=====  =====  =====\n");
-                        scanf_s("%d", &door_game);
-                        switch (door_game) {
-                        case 1:
-                            printf("You died by monster!\n");
-                            break;
-                        case 2:
-                            printf("U find a lot of money!$$$$\n");
-                            break;
-                        case 3:
-                            printf("You find new 3 doors..\n");
-                            system("pause");
-                            door_game = -1;
-                            while (door_game != 1 && door_game != 2 && door_game != 3 && door_game != 4) {
-                                system("cls");
-                                printf("=====  =====  =====\n"
-                                    "|   |  |   |  |   |\n"
-                                    "| 1 |  | 2 |  | 3 |\n"
-                                    "|   |  |   |  |   |\n"
-                                    "=====  =====  =====\n");
-                                printf("Choose the door\n");
-                                scanf_s("%d", &door_game);
-                                switch (door_game) {
-                                case 1:
-                                    system("cls");
-                                    printf("You find a toy\n");
-                                    printf("   ___   \n"
-                                        "  |   |   \n"
-                                        "=========\n"
-                                        "| |   | |\n"
-                                        "| |   | |\n"
-                                        "| |   | |\n"
-                                        "+=======+\n"
-                                        " |     |\n"
-                                        " |     |\n"
-                                        " |     |\n"
-                                        "==     ==\n");
-                                    break;
-                                case 2:
-                                    system("cls");
-                                    printf("The new world\n");
-                                    printf("You can go out..\n");
-                                    break;
-                                case 3:
-                                    system("cls");
-                                    printf("You find your death\n");
-                                    break;
-                                case 4:
-                                    system("cls");
-                                    printf("Secret final, your family right here.\n");
-                                    break;
-                                default:
-                                    printf("Incorrect input\n");
-                                    continue;
-                                }
-
-                            }
-                            break;
-                        default:
-                            printf("Input correct number of door\n");
-                            continue;
-                        }
-                    }
+                    start_main_game();
                     break;
                 case 3:
                     system("cls");
@@ -463,9 +387,7 @@ int main() {
                     Flag = end_program();
                     break;
                 default:
-                    printf("Incorrect input\n");
-                    system("pause");
-                    system("cls");
+                    incorrect_input();
                     continue;
                 }
                 if (Flag == 0) {
@@ -475,154 +397,14 @@ int main() {
             }
             break;
         case 2:
-            user_choice = -1;
-            while (user_choice != 1 && user_choice != 2 && user_choice != 3 && user_choice != 0) {
-                system("cls");
-                printf("**SETTINGS**\n");
-                printf("1.Difficult\n"
-                    "2.Color\n"
-                    "3.Back\n"
-                    "0.Exit\n");
-                scanf_s("%d", &user_choice);
-                switch (user_choice) {
-                case 1:
-                    user_choice = -1;
-                    while (user_choice != 1 && user_choice != 2 && user_choice != 3 && user_choice != 4 && user_choice != 0) {
-                        system("pause");
-                        system("cls");
-                        printf("**DIFFICULT**\n");
-                        printf("1.Hard\n"
-                            "2.Normal\n"
-                            "3.Easy\n"
-                            "4.Back\n"
-                            "0.Exit\n");
-                        if (difficult == 1) {
-                            printf("Now - Hard\n");
-                        }
-                        else if (difficult == 2) {
-                            printf("Now - Normal\n");
-                        }
-                        else {
-                            printf("Now - Easy\n");
-                        }
-                        scanf_s("%d", &user_choice);
-                        switch (user_choice) {
-                        case 1:
-                            difficult = 1;//Hard
-                            printf("New difficulty - Hard\n");
-                            system("pause");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 2:
-                            printf("The normal difficulty is set\n");
-                            difficult = 2;//Normal
-                            printf("New difficulty - Normal\n");
-                            system("pause");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 3:
-                            printf("A simple difficulty level has been set\n");
-                            difficult = 3;//Easy
-                            printf("New difficulty - Easy\n");
-                            system("pause");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 4:
-                            continue;
-                        case 0:
-                            Flag = end_program();
-                            break;
-                        default:
-                            printf("Incorrect input\n");
-                            system("pause");
-                            system("cls");
-                            continue;
-                        }
-                        if (user_choice == -1) {
-                            break;
-                        }
-                        if (Flag == 0) {
-                            print_end_menu(score, total, wins, defeats);
-                            break;
-                        }
-                    }
-                    break;
-                case 2:
-                    user_choice = -1;
-                    while (user_choice != 1 && user_choice != 2 && user_choice != 3 && user_choice != 4 && user_choice != 0) {
-                        system("cls");
-                        printf("**COLORS**\n"
-                            "1.Blue-White system\n"
-                            "2.Green-Black system\n"
-                            "3.Black-Purple\n"
-                            "4.Back\n"
-                            "0.Exit\n");
-                        scanf_s("%d", &user_choice);
-                        switch (user_choice) {
-                        case 1:
-                            system("color 17");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 2:
-                            system("color 20");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 3:
-                            system("color 5");
-                            system("cls");
-                            user_choice = -1;
-                            continue;
-                        case 4:
-                            continue;
-                        case 0:
-                            Flag = end_program();
-                            break;
-                        default:
-                            printf("Incorrect input\n");
-                            system("pause");
-                            system("cls");
-                            continue;
-                        }
-                        if (user_choice == -1) {
-                            break;
-                        }
-                        if (Flag == 0) {
-                            print_end_menu(score, total, wins, defeats);
-                            break;
-                        }
-                    }
-                    break;
-                case 3:
-                    system("cls");
-                    continue;
-                case 0:
-                    Flag = end_program();
-                    break;
-                default:
-                    printf("Incorrect input\n");
-                    system("pause");
-                    system("cls");
-                    continue;
-                }
-                if (Flag == 0) {
-                    print_end_menu(score, total, wins, defeats);
-                    break;
-                }
-            }
+            settings_menu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
             break;
         case 0:
             Flag = end_program();
             print_end_menu(score, total, wins, defeats);
             break;
         default:
-            printf("Incorrect input\n");
-            system("pause");
-            system("cls");
+            incorrect_input();
             continue;
         }
     }
