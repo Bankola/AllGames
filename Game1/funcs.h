@@ -16,12 +16,18 @@ void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficu
 void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void guess_game_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void BullsCowsMenu(int* score, int* total, int* wins, int* defeats, int* user_choice, int* Flag);
+
 // Компьютерный режим
 void computer_mode_hard(int* score, int* total, int* wins, int* defeats);
 void computer_mode_normal(int* score, int* total, int* wins, int* defeats);
 void computer_mode_easy(int* score, int* total, int* wins, int* defeats);
 void play_computer_mode(int* score, int* total, int* wins, int* defeats, int difficult);
 int get_back_choice(int* user_choice);
+
 //Быки и коровы
 void StartBullsCows(int* score, int* total, int* wins, int* defeats, int* user_choice, int* Flag);
+int UserNumberDivision(int* user_number);
+int ComputerNumberDivision(int* computer_number);
+int CountBulls(int user_number, int computer_number);
+int CountCows(int user_number, int computer_number);
 #endif
