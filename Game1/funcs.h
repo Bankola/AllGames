@@ -6,6 +6,7 @@ int end_program();
 void print_end_menu(int score, int total, int wins, int defeats);
 void start_main_game();
 void incorrect_input();
+void InputInfoToFile(int score, int total, int wins, int defeats);
 
 // Настройки
 void setting_colors(int* Flag, int* score, int* total, int* wins, int* defeats, int* user_choice);
@@ -16,6 +17,8 @@ void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficu
 void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void guess_game_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void BullsCowsMenu(int* score, int* total, int* wins, int* defeats, int* user_choice, int* Flag);
+void MainMenu();
+void StartStatistics();
 
 // Компьютерный режим
 void computer_mode_hard(int* score, int* total, int* wins, int* defeats);

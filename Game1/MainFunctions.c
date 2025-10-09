@@ -13,7 +13,17 @@ int end_program() {
     return x;
 }//work
 
-
+void InputInfoToFile(int score, int total, int wins, int defeats) {
+    FILE* file = NULL;
+    errno_t err;
+    err = fopen_s(&file, "UserStatistics.txt", "w");
+    fprintf(file, "Score: %d\n"
+        "Total: %d\n"
+        "Wins: %d\n"
+        "Defeats: %d\n",
+        score, total, wins, defeats);
+    fclose(file);
+}
 void print_end_menu(int score, int total, int wins, int defeats) {
     printf("***THE END***\n\n");
     printf("YOUR SCORE: %d\n", score);
@@ -225,3 +235,71 @@ void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficu
         }
     }
 }//work
+
+
+void StartStatistics() {
+    int user_choice = -1;
+    FILE* file = NULL;
+    errno_t err;
+    while (user_choice != 1 && user_choice != 2) {
+        printf("**MENU**\n");
+        printf("1.New Game\n"
+            "2.Continue\n");
+        scanf_s("%d", &user_choice);
+        switch (user_choice) {
+        case 1:
+            err = fopen_s(&file, "UserStatistics.txt", "w");
+            fclose(file);
+            system("pause");
+            system("cls");
+            MainMenu();
+            break;
+        case 2:
+            err = fopen_s(&file, "UserStatistics.txt", "w");
+            system("pause");
+            system("cls");
+            MainMenu();
+            fclose(file);
+            break;
+        default:
+            incorrect_input();
+            continue;
+        }
+    }
+}
+
+void MainMenu() {
+    
+    int defeats = 0;
+    int wins = 0;
+    int total = 0;
+    int score = 0;
+    int user_choice = -1;
+    int Flag = 1;
+    int difficult = 2; // Normal
+
+    while (user_choice != 1 && user_choice != 2 && user_choice != 0) {
+        printf("**MAIN MENU**\n");
+        printf("1.Play\n"
+            "2.Settings\n"
+            "0.Exit\n");
+        scanf_s("%d", &user_choice);
+
+        switch (user_choice) {
+        case 1:
+            play_menu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
+            break;
+        case 2:
+            settings_menu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
+            break;
+        case 0:
+            Flag = end_program();
+            print_end_menu(score, total, wins, defeats);
+            break;
+        default:
+            incorrect_input();
+            continue;
+        }
+    }
+    return 0;
+}

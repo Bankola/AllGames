@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="funcs.c">
+    <ClCompile Include="MainFunctions.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main.c">
@@ -35,5 +35,8 @@
     <ClInclude Include="funcs.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="UserStatistics.txt" />
   </ItemGroup>
 </Project>

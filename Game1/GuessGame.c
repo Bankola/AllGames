@@ -138,7 +138,7 @@ void computer_mode_hard(int* score, int* total, int* wins, int* defeats) {
         *wins += 1;
         printf("Computer didn't guess the number in %d attempts!\n", attempts);
     }
-
+    InputInfoToFile(score, total, wins, defeats);
     get_back_choice(NULL);
 }//work
 
@@ -211,7 +211,7 @@ void computer_mode_normal(int* score, int* total, int* wins, int* defeats) {
         *wins += 1;
         printf("Computer didn't guess the number in %d attempts!\n", max_attempts);
     }
-
+    InputInfoToFile(*score, *total, *wins, *defeats);
     get_back_choice(NULL);
 }//work
 
