@@ -4,7 +4,7 @@
 #include <time.h>
 #include <windows.h>
 
-void start_main_game() {
+void StartMainGame() {
     system("pause");
     system("cls");
     int door_game = -1;

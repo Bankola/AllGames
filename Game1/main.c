@@ -5,6 +5,6 @@
 #include "funcs.h"
 
 int main() {
-    StartStatistics();
+    StartProgram();
     return 0;
 }

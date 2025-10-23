@@ -27,14 +27,14 @@ void BullsCowsMenu(int* score, int* total, int* wins, int* defeats, int* user_ch
             printf("That's button don`t working :) Try later.\n");
             break;
         case 0:
-            *Flag = end_program();
+            *Flag = EndProgram();
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             continue;
         }
         if (*Flag == 0) {
-            print_end_menu(*score, *total, *wins, *defeats);
+            PrintEndMenu(*score, *total, *wins, *defeats);
             break;
         }
     }

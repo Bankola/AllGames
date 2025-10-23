@@ -5,7 +5,7 @@
 #include <windows.h>
 
 
-void guess_game_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
+void GuessGameMenu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
     *user_choice = -1;
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 0) {
         system("pause");
@@ -31,7 +31,7 @@ void guess_game_menu(int* score, int* total, int* wins, int* defeats, int* diffi
 
         switch (*user_choice) {
         case 1:
-            play_computer_mode(score, total, wins, defeats, *difficult);
+            PlayComputerMode(score, total, wins, defeats, *difficult);
             *user_choice = -1;
             break;
         case 2:
@@ -43,35 +43,35 @@ void guess_game_menu(int* score, int* total, int* wins, int* defeats, int* diffi
             *user_choice = -1;
             return;
         case 0:
-            *Flag = end_program();
+            *Flag = EndProgram();
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             continue;
         }
 
         if (*Flag == 0) {
-            print_end_menu(*score, *total, *wins, *defeats);
+            PrintEndMenu(*score, *total, *wins, *defeats);
             break;
         }
     }
 }//work
 
-void play_computer_mode(int* score, int* total, int* wins, int* defeats, int difficult) {
+void PlayComputerMode(int* score, int* total, int* wins, int* defeats, int difficult) {
     switch (difficult) {
     case 1:
-        computer_mode_hard(score, total, wins, defeats);
+        ComputerModeHard(score, total, wins, defeats);
         break;
     case 2:
-        computer_mode_normal(score, total, wins, defeats);
+        ComputerModeNormal(score, total, wins, defeats);
         break;
     case 3:
-        computer_mode_easy(score, total, wins, defeats);
+        ComputerModeEasy(score, total, wins, defeats);
         break;
     }
 }//work
 
-void computer_mode_hard(int* score, int* total, int* wins, int* defeats) {
+void ComputerModeHard(int* score, int* total, int* wins, int* defeats) {
     int low = 1;
     int high = 100;
     int guess;
@@ -139,10 +139,10 @@ void computer_mode_hard(int* score, int* total, int* wins, int* defeats) {
         printf("Computer didn't guess the number in %d attempts!\n", attempts);
     }
     InputInfoToFile(score, total, wins, defeats);
-    get_back_choice(NULL);
+    GetBackChoice(NULL);
 }//work
 
-void computer_mode_normal(int* score, int* total, int* wins, int* defeats) {
+void ComputerModeNormal(int* score, int* total, int* wins, int* defeats) {
     int low = 1;
     int high = 100;
     int guess;
@@ -212,10 +212,10 @@ void computer_mode_normal(int* score, int* total, int* wins, int* defeats) {
         printf("Computer didn't guess the number in %d attempts!\n", max_attempts);
     }
     InputInfoToFile(*score, *total, *wins, *defeats);
-    get_back_choice(NULL);
+    GetBackChoice(NULL);
 }//work
 
-void computer_mode_easy(int* score, int* total, int* wins, int* defeats) {
+void ComputerModeEasy(int* score, int* total, int* wins, int* defeats) {
     int guess;
     int attempts = 0;
     char response;
@@ -279,10 +279,10 @@ void computer_mode_easy(int* score, int* total, int* wins, int* defeats) {
         printf("Computer didn't guess the number in %d attempts!\n", max_attempts);
     }
 
-    get_back_choice(NULL);
+    GetBackChoice(NULL);
 }//work
 
-int get_back_choice(int* user_choice) {
+int GetBackChoice(int* user_choice) {
     int back_choice = -1;
     while (back_choice != 1) {
         system("pause");

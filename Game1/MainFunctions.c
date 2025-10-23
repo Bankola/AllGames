@@ -4,7 +4,7 @@
 #include <time.h>
 #include <windows.h>
 
-int end_program() {
+int EndProgram() {
     system("cls");
     int x = 0;
     printf("Ending the program..\n");
@@ -17,14 +17,14 @@ void InputInfoToFile(int score, int total, int wins, int defeats) {
     FILE* file = NULL;
     errno_t err;
     err = fopen_s(&file, "UserStatistics.txt", "w");
-    fprintf(file, "Score: %d\n"
-        "Total: %d\n"
-        "Wins: %d\n"
-        "Defeats: %d\n",
+    fprintf(file, "%d\n"
+        "%d\n"
+        "%d\n"
+        "%d\n",
         score, total, wins, defeats);
     fclose(file);
 }
-void print_end_menu(int score, int total, int wins, int defeats) {
+void PrintEndMenu(int score, int total, int wins, int defeats) {
     printf("***THE END***\n\n");
     printf("YOUR SCORE: %d\n", score);
     printf("TOTAL GAMES: %d\n", total);
@@ -35,7 +35,7 @@ void print_end_menu(int score, int total, int wins, int defeats) {
 }//work
 
 
-void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
+void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
     *user_choice = -1;
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 0) {
         system("pause");
@@ -50,10 +50,10 @@ void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, 
 
         switch (*user_choice) {
         case 1:
-            guess_game_menu(score, total, wins, defeats, difficult, Flag, user_choice);
+            GuessGameMenu(score, total, wins, defeats, difficult, Flag, user_choice);
             break;
         case 2:
-            start_main_game();
+            StartMainGame();
             break;
         case 3:
             BullsCowsMenu(score, total, wins, defeats, user_choice, Flag);
@@ -62,29 +62,29 @@ void play_menu(int* score, int* total, int* wins, int* defeats, int* difficult, 
             system("cls");
             return;
         case 0:
-            *Flag = end_program();
+            *Flag = EndProgram();
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             continue;
         }
 
         if (*Flag == 0) {
-            print_end_menu(*score, *total, *wins, *defeats);
+            PrintEndMenu(*score, *total, *wins, *defeats);
             break;
         }
     }
 }//work
 
 
-void incorrect_input() {
+void IncorrectInput() {
     printf("Incorrect input\n");
     system("pause");
     system("cls");
 }//work
 
 
-void setting_colors(int* Flag, int* score, int* total, int* wins, int* defeats, int* user_choice) {
+void SettingColors(int* Flag, int* score, int* total, int* wins, int* defeats, int* user_choice) {
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 4 && *user_choice != 0) {
         system("cls");
         printf("**COLORS**\n"
@@ -113,10 +113,10 @@ void setting_colors(int* Flag, int* score, int* total, int* wins, int* defeats, 
         case 4:
             return;
         case 0:
-            *Flag = end_program();
+            *Flag = EndProgram();
             return;  
         default:
-            incorrect_input();
+            IncorrectInput();
             *user_choice = -1;  
             continue;
         }
@@ -124,7 +124,7 @@ void setting_colors(int* Flag, int* score, int* total, int* wins, int* defeats, 
 }//work
 
 
-void change_difficult(int* Flag, int* difficult, int* user_choice) {
+void ChangeDifficult(int* Flag, int* difficult, int* user_choice) {
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 4 && *user_choice != 0) {
         system("pause");
         system("cls");
@@ -171,10 +171,10 @@ void change_difficult(int* Flag, int* difficult, int* user_choice) {
         case 4:
             return;  
         case 0:
-            *Flag = end_program();  
+            *Flag = EndProgram();  
             return;  
         default:
-            incorrect_input();
+            IncorrectInput();
             *user_choice = -1;  
             continue;
         }
@@ -182,7 +182,7 @@ void change_difficult(int* Flag, int* difficult, int* user_choice) {
 }//work
 
 
-void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
+void SettingsMenu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice) {
     *user_choice = -1;
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 0) {
         system("cls");
@@ -195,49 +195,49 @@ void settings_menu(int* score, int* total, int* wins, int* defeats, int* difficu
         switch (*user_choice) {
         case 1:
             *user_choice = -1;
-            change_difficult(Flag, difficult, user_choice);
+            ChangeDifficult(Flag, difficult, user_choice);
             if (*user_choice == -1) {
                 break;
             }
             if (*Flag == 0) {  
-                print_end_menu(*score, *total, *wins, *defeats);
+                PrintEndMenu(*score, *total, *wins, *defeats);
                 return;  
             }
             break;
         case 2:
             *user_choice = -1;
-            setting_colors(Flag, score, total, wins, defeats, user_choice);
+            SettingColors(Flag, score, total, wins, defeats, user_choice);
             if (*user_choice == -1) {
                 break;
             }
             if (*Flag == 0) {  
-                print_end_menu(*score, *total, *wins, *defeats);
+                PrintEndMenu(*score, *total, *wins, *defeats);
                 return;  
             }
             break;
         case 3:
             return;  
         case 0:
-            *Flag = end_program();  
+            *Flag = EndProgram();  
             if (*Flag == 0) {
-                print_end_menu(*score, *total, *wins, *defeats);
+                PrintEndMenu(*score, *total, *wins, *defeats);
                 return;
             }
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             *user_choice = -1; 
             continue;
         }
         if (*Flag == 0) {  
-            print_end_menu(*score, *total, *wins, *defeats);
+            PrintEndMenu(*score, *total, *wins, *defeats);
             return;
         }
     }
 }//work
 
 
-void StartStatistics() {
+void StartProgram() {
     int user_choice = -1;
     FILE* file = NULL;
     errno_t err;
@@ -262,7 +262,7 @@ void StartStatistics() {
             fclose(file);
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             continue;
         }
     }
@@ -287,17 +287,17 @@ void MainMenu() {
 
         switch (user_choice) {
         case 1:
-            play_menu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
+            GamesMenu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
             break;
         case 2:
-            settings_menu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
+            SettingsMenu(&score, &total, &wins, &defeats, &difficult, &Flag, &user_choice);
             break;
         case 0:
-            Flag = end_program();
-            print_end_menu(score, total, wins, defeats);
+            Flag = EndProgram();
+            PrintEndMenu(score, total, wins, defeats);
             break;
         default:
-            incorrect_input();
+            IncorrectInput();
             continue;
         }
     }
