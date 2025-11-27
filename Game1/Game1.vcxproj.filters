@@ -30,13 +30,19 @@
     <ClCompile Include="BullsAndCowsGame.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="MEMOGame.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Sapper.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funcs.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="UserStatistics.txt" />
+    <ClInclude Include="utilities.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

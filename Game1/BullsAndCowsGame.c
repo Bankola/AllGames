@@ -9,7 +9,7 @@ void BullsCowsMenu(int* score, int* total, int* wins, int* defeats, int* user_ch
     while (*user_choice != 1 && *user_choice != 2 && *user_choice != 3 && *user_choice != 0) {
         system("pause");
         system("cls");
-        printf("**BULLS AND COWS**\n");
+        printf("== BULLS AND COWS ==\n");
         printf("1.Start game \n"
         "2.Back\n"
         "3.Info\n"

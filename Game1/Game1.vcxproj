@@ -128,12 +128,12 @@
     <ClCompile Include="GuessGame.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MainGame.c" />
+    <ClCompile Include="MEMOGame.c" />
+    <ClCompile Include="Sapper.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funcs.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="UserStatistics.txt" />
+    <ClInclude Include="utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

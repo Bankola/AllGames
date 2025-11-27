@@ -5,6 +5,7 @@
 #include "funcs.h"
 
 int main() {
+    srand(time(NULL));
     StartProgram();
     return 0;
 }

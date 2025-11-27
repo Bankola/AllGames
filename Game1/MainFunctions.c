@@ -13,17 +13,7 @@ int EndProgram() {
     return x;
 }//work
 
-void InputInfoToFile(int score, int total, int wins, int defeats) {
-    FILE* file = NULL;
-    errno_t err;
-    err = fopen_s(&file, "UserStatistics.txt", "w");
-    fprintf(file, "%d\n"
-        "%d\n"
-        "%d\n"
-        "%d\n",
-        score, total, wins, defeats);
-    fclose(file);
-}
+
 void PrintEndMenu(int score, int total, int wins, int defeats) {
     printf("***THE END***\n\n");
     printf("YOUR SCORE: %d\n", score);
@@ -44,10 +34,11 @@ void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, 
         printf("1.Guess Game\n"
             "2.Main Game\n"
             "3.Bulls and Cows\n"
-            "4.Back\n"
+            "4.MEMO\n"
+            "5.Sapper\n"
+            "6.Back\n"
             "0.Exit\n");
         scanf_s("%d", user_choice);
-
         switch (*user_choice) {
         case 1:
             GuessGameMenu(score, total, wins, defeats, difficult, Flag, user_choice);
@@ -59,6 +50,14 @@ void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, 
             BullsCowsMenu(score, total, wins, defeats, user_choice, Flag);
             break;
         case 4:
+            system("cls");
+            StartMEMO(difficult);
+            break;
+        case 5:
+            system("cls");
+            StartSapper(difficult);
+            break;
+        case 6:
             system("cls");
             return;
         case 0:
@@ -237,38 +236,8 @@ void SettingsMenu(int* score, int* total, int* wins, int* defeats, int* difficul
 }//work
 
 
-void StartProgram() {
-    int user_choice = -1;
-    FILE* file = NULL;
-    errno_t err;
-    while (user_choice != 1 && user_choice != 2) {
-        printf("**MENU**\n");
-        printf("1.New Game\n"
-            "2.Continue\n");
-        scanf_s("%d", &user_choice);
-        switch (user_choice) {
-        case 1:
-            err = fopen_s(&file, "UserStatistics.txt", "w");
-            fclose(file);
-            system("pause");
-            system("cls");
-            MainMenu();
-            break;
-        case 2:
-            err = fopen_s(&file, "UserStatistics.txt", "w");
-            system("pause");
-            system("cls");
-            MainMenu();
-            fclose(file);
-            break;
-        default:
-            IncorrectInput();
-            continue;
-        }
-    }
-}
 
-void MainMenu() {
+void StartProgram() {
     
     int defeats = 0;
     int wins = 0;
@@ -301,5 +270,4 @@ void MainMenu() {
             continue;
         }
     }
-    return 0;
 }

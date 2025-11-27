@@ -6,7 +6,6 @@ int EndProgram();
 void PrintEndMenu(int score, int total, int wins, int defeats);
 void StartMainGame();
 void IncorrectInput();
-void InputInfoToFile(int score, int total, int wins, int defeats);
 
 // Настройки
 void SettingColors(int* Flag, int* score, int* total, int* wins, int* defeats, int* user_choice);
@@ -17,13 +16,9 @@ void SettingsMenu(int* score, int* total, int* wins, int* defeats, int* difficul
 void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void GuessGameMenu(int* score, int* total, int* wins, int* defeats, int* difficult, int* Flag, int* user_choice);
 void BullsCowsMenu(int* score, int* total, int* wins, int* defeats, int* user_choice, int* Flag);
-void MainMenu();
 void StartProgram();
 
 // Компьютерный режим
-void ComputerModeHard(int* score, int* total, int* wins, int* defeats);
-void ComputerModeNormal(int* score, int* total, int* wins, int* defeats);
-void ComputerModeEasy(int* score, int* total, int* wins, int* defeats);
 void PlayComputerMode(int* score, int* total, int* wins, int* defeats, int difficult);
 int GetBackChoice(int* user_choice);
 
@@ -33,4 +28,22 @@ int UserNumberDivision(int* user_number);
 int ComputerNumberDivision(int* computer_number);
 int CountBulls(int user_number, int computer_number);
 int CountCows(int user_number, int computer_number);
+
+//Мемо
+int StartMEMO(int* difficult);
+void Shuffle(char* mass, int size);
+void InitializeBoard(char* board);
+void PrintBoard(char* board, int* revealed);
+int MakeMove(char* board, int* revealed);
+int AllCardsFound(int* revealed);
+void Delay(int milliseconds);
+void ClearScreen();
+
+//Сапёр
+char** CreateFalseMassive(int rows, int cols);
+char** CreateMassive(int rows, int cols);
+void Shuffle2nd(char** matrix, int rows, int cols);
+void PrintMassive(char** matrix, int rows, int cols);
+void FreeMassive(char** matrix, int rows);
+void CountBombs(char** massive, int rows, int cols);
 #endif
