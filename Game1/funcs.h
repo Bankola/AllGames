@@ -40,8 +40,10 @@ void Delay(int milliseconds);
 void ClearScreen();
 
 //Сапёр
+char** CreateRevealMassive(int rows, int cols);
 char** CreateFalseMassive(int rows, int cols);
-char** CreateMassive(int rows, int cols);
+char** CreateMassive(int rows, int cols, int MinesCount);
+int MakeStep(int rows, int cols, int user_row, int user_cols, int user_command, char** reveal, char** massive, char** Fmassive);
 void Shuffle2nd(char** matrix, int rows, int cols);
 void PrintMassive(char** matrix, int rows, int cols);
 void FreeMassive(char** matrix, int rows);
