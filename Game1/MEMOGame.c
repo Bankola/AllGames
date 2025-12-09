@@ -119,84 +119,73 @@ void PrintBoard(char* board, int* revealed) {
     printf("\n+----+----+----+----+----+----+----+----+----+----+\n");
 }
 
-int MakeMove(char* board, int* revealed) {
-    int card1, card2;
-
+int CheckInfo(int* revealed) {  // Изменен тип параметра с char* на int*
+    int card;
     while (1) {
-        printf("Select the first card (1-10):");
-        if (scanf_s("%d", &card1) != 1) {
+        printf("\nSelect the card (1-10): ");
+        if (scanf_s("%d", &card) != 1) {
             printf("Input error! Enter a number between 1 and 10.\n");
-            while (getchar() != '\n'); //Очистка буфера
+            while (getchar() != '\n');
             continue;
         }
-
-        if (card1 < 1 || card1 > 10) {
-            printf("Incorrect number! Enter a number between 1 and 10.\n");
-            continue;
+        if (card < 1 || card > 10) {  // Исправлено: было card < 0
+            printf("Input error! Enter a number between 1 and 10.\n");
+            continue;  // Исправлено: был return 0
         }
-
-        if (revealed[card1 - 1]) {
+        if (revealed[card - 1]) {
             printf("This card is already open! Select another one.\n");
-            continue;
+            continue;  // Исправлено: был return 0
         }
-
-        break;
+        return card;
     }
+}
+int CheckResult(int card1, int card2, char* board, int* revealed) {
+    if (board[card1 - 1] == board[card2 - 1]) {
+        printf("\nCOINCIDENCE! The cards remain open.\n");
+        return 1;
+    }
+    else {
+        printf("\nNOT MATCHED. The cards are hidden again.\n");
+        revealed[card1 - 1] = 0;
+        revealed[card2 - 1] = 0;
+        return 0;
+    }
+}
+int MakeMove(char* board, int* revealed) {
+    int card1 = CheckInfo(revealed);
+    if (card1 == 0) return 0;  
+    ChooseFirstCard(card1, board, revealed);
 
-    //Показывает первую карту
+    int card2 = CheckInfo(revealed);
+    if (card2 == 0) {
+        revealed[card1 - 1] = 0;
+        return 0;
+    }
+    ChooseSecondCard(card1, card2, board, revealed);
+
+    if (CheckResult(card1, card2, board, revealed)) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+void ChooseFirstCard(int card1, char* board, int* revealed) {  
     revealed[card1 - 1] = 1;
     ClearScreen();
     printf("\nThe first card: %c\n", board[card1 - 1]);
     printf("Current field:\n");
     PrintBoard(board, revealed);
+}
 
-    //Выбор второй карты
-    while (1) {
-        printf("\nSelect the second card (1-10): ");
-        if (scanf_s("%d", &card2) != 1) {
-            printf("Input error! Enter a number between 1 and 10.\n");
-            while (getchar() != '\n');
-            continue;
-        }
-
-        if (card2 < 1 || card2 > 10) {
-            printf("Incorrect number! Enter a number between 1 and 10.\n");
-            continue;
-        }
-
-        if (card2 == card1) {
-            printf("You can't select the same card! Select a different one.\n");
-            continue;
-        }
-
-        if (revealed[card2 - 1]) {
-            printf("This card is already open! Select another one.\n");
-            continue;
-        }
-
-        break;
-    }
-
-    //Показывает вторую карту
+void ChooseSecondCard(int card1, int card2, char* board, int* revealed) {  
     revealed[card2 - 1] = 1;
     ClearScreen();
     printf("\nFirst card: %c, Second card: %c\n",
         board[card1 - 1], board[card2 - 1]);
     printf("Current field:\n");
     PrintBoard(board, revealed);
-
-    //Проверка совпадения
-    if (board[card1 - 1] == board[card2 - 1]) {
-        printf("\n COINCIDENCE! The cards remain open.\n");
-        return 1; //Найдена пара
-    }
-    else {
-        printf("\n NOT MATCHED. The cards are hidden again.\n");
-        //Скрываем карты обратно
-        revealed[card1 - 1] = 0;
-        revealed[card2 - 1] = 0;
-        return 0; //Случай несовпадения
-    }
 }
 
 int AllCardsFound(int* revealed) {
@@ -208,7 +197,6 @@ int AllCardsFound(int* revealed) {
     return 1;
 }
 
-// Задержка в миллисекундах
 void Delay(int milliseconds) {
 #ifdef _WIN32
     Sleep(milliseconds);
@@ -217,7 +205,6 @@ void Delay(int milliseconds) {
 #endif
 }
 
-// Очистка экрана
 void ClearScreen() {
 #ifdef _WIN32
     system("cls");

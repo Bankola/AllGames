@@ -31,6 +31,10 @@ int CountCows(int user_number, int computer_number);
 
 //Мемо
 int StartMEMO(int* difficult);
+int CheckInfo(int card, char* revealed);
+int CheckResult(int card1, int card2, char* board, int* revealed);
+void ChooseFirstCard(int card1, char* board, char* revealed);
+void ChooseSecondCard(int card1, int card2, char* board, char* revealed);
 void Shuffle(char* mass, int size);
 void InitializeBoard(char* board);
 void PrintBoard(char* board, int* revealed);
