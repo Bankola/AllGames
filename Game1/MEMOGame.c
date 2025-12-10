@@ -10,8 +10,8 @@
 
 int StartMEMO(int* difficult) {
     srand(time(NULL));
-    char board[10];//Все карты, по типу A,B,C и т.д.
-    int revealed[10] = { 0 }; //массив вскрытых карт, 0-закрыта, 1-вскрыта
+    char board[10];
+    int revealed[10] = { 0 }; 
     int score = 0;
     int attempts = 0;
     int pairsFound = 0;
@@ -113,7 +113,7 @@ void PrintBoard(char* board, int* revealed) {
             printf("  %c |", board[i]);
         }
         else {
-            printf("  ? |");
+            printf("  . |");
         }
     }
     printf("\n+----+----+----+----+----+----+----+----+----+----+\n");

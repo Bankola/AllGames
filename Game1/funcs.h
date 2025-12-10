@@ -44,12 +44,17 @@ void Delay(int milliseconds);
 void ClearScreen();
 
 //Сапёр
-char** CreateRevealMassive(int rows, int cols);
-char** CreateFalseMassive(int rows, int cols);
-char** CreateMassive(int rows, int cols, int MinesCount);
-int MakeStep(int rows, int cols, int user_row, int user_cols, int user_command, char** reveal, char** massive, char** Fmassive);
-void Shuffle2nd(char** matrix, int rows, int cols);
-void PrintMassive(char** matrix, int rows, int cols);
-void FreeMassive(char** matrix, int rows);
-void CountBombs(char** massive, int rows, int cols);
+char** CreateMineField(int rows, int cols, int mines_count);
+char** CreateDisplayField(int rows, int cols);
+char** CreateStateField(int rows, int cols);
+void ClearField(char** field, int rows);
+void CreateMines(char** mine_field, int rows, int cols, int mines_count);
+void CalculateNumbers(char** mine_field, int rows, int cols);
+void PrintField(char** field, int rows, int cols, int show_numbers);
+void ClearInput();
+int MakeMoveSapper(char** mine_field, char** display_field, char** state_field, int rows, int cols, int mines_count, int* flags_count, int row, int col, char command);
+void RecursiveReveal(char** mine_field, char** display_field, char** state_field, int rows, int cols, int row, int col);
+int CheckGameWin(char** mine_field, char** state_field, int rows, int cols, int mines_count, int flags_count);
+int CountBombsAround(char** mine_field, int row, int col, int rows, int cols);
+int IsValidCell(int row, int col, int rows, int cols);
 #endif

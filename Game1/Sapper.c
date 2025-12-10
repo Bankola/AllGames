@@ -1,172 +1,184 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 #include "funcs.h"
-#include "utilities.h"
+#define DEBUG
+int StartSapper(int* difficulty) {
 
-int StartSapper(int* difficult) {
-    int rows, cols, FlagsCount = 0, MinesCount;
-    if (*difficult == 1) {
+    int rows, cols, mines_count;
+
+    if (*difficulty == 2) {
         rows = 10;
         cols = 10;
+        mines_count = 10;
     }
-    else if (*difficult == 2) {
-        rows = 8;
-        cols = 8;
+    else if (*difficulty == 1) {
+        rows = 16;
+        cols = 16;
+        mines_count = 40;
     }
     else {
         rows = 5;
         cols = 5;
+        mines_count = 5;
     }
-    MinesCount = (rows * cols) / 4;
-    char** massive = CreateMassive(rows, cols, MinesCount);
-    char** Fmassive = CreateFalseMassive(rows, cols);
-    char** reveal = CreateRevealMassive(rows, cols);
-    Shuffle2nd(massive, rows, cols);
-    CountBombs(massive, rows, cols);
-    while (FlagsCount != MinesCount) {
+    char** mine_field = CreateMineField(rows, cols, mines_count);
+    char** display_field = CreateDisplayField(rows, cols);
+    char** state_field = CreateStateField(rows, cols);
+
+    srand(time(NULL));
+    CreateMines(mine_field, rows, cols, mines_count);
+    CalculateNumbers(mine_field, rows, cols);
+
+    int flags_count = 0;
+    int game_over = 0;
+    int win = 0;
+    while (!game_over && !win) {
         system("cls");
-        int user_row, user_cols;
-        char user_command;
-        PrintMassive(Fmassive, rows, cols);
-        printf("'O' - open\n"
-            "F - set flag\n"
-            "D - delete flag\n"
-            "Enter the cell in the following format: i j c\n"
-            "i is the row number, j is the column number, c is the command.\n"
-            "Example: 1 2 O\n");
-        printf("Your choice is: ");
-        scanf_s("%d %d %c", &user_row, &user_cols, &user_command);
-        MakeStep(rows, cols, user_row, user_cols, user_command, reveal, massive, Fmassive);
+#ifdef DEBUG
+        printf("DEBUG MODE ONLY\n");
+        PrintField(mine_field, rows, cols, 1);
+#endif
+        printf("=== Sapper ===\n");
+        printf("Size: %dx%d, Mines: %d\n", rows, cols, mines_count);
+        printf("Flags: %d/%d\n\n", flags_count, mines_count);
+
+        PrintField(display_field, rows, cols, 1);
+
+        printf("Commands:\n");
+        printf("  O - Open\n");
+        printf("  F - Set/Delete Flag\n");
+        printf("\nFormat: row col command\n");
+        printf("Example: 5 3 O\n\n");
+
+        int input_row, input_col;
+        char input_command;
+
+        printf("Your choice: ");
+        if (scanf_s("%d %d %c", &input_row, &input_col, &input_command) != 3) {
+            printf("\nInput Error!\n");
+            ClearInput();
+            printf("Use Enter to continue..\n");
+            getchar();
+            continue;
+        }
+
+        input_command = toupper(input_command);
+
+        if (input_row < 1 || input_row > rows || input_col < 1 || input_col > cols) {
+            printf("\nError! Input coordinates 1-%d и 1-%d\n", rows, cols);
+            printf("Use Enter to continue..\n");
+            ClearInput();
+            getchar();
+            continue;
+        }
+
+        if (input_command != 'O' && input_command != 'F') {
+            printf("\nError! Unknown command\n");
+            printf("Use Enter to continue..\n");
+            ClearInput();
+            getchar();
+            continue;
+        }
+
+        int move_result = MakeMoveSapper(mine_field, display_field, state_field,
+            rows, cols, mines_count, &flags_count,
+            input_row, input_col, input_command);
+
+        if (move_result == 1) { 
+            game_over = 1;
+            system("cls");
+            printf("\n=== End ===\n");
+            printf("You find the mine in (%d, %d)!\n\n", input_row, input_col);
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    if (mine_field[i][j] == 'X') {
+                        display_field[i][j] = 'X';
+                    }
+                }
+            }
+            display_field[input_row - 1][input_col - 1] = '!'; 
+
+            PrintField(display_field, rows, cols, 1);
+        }
+        else if (move_result == 0) { 
+            win = CheckGameWin(mine_field, state_field, rows, cols, mines_count, flags_count);
+
+            if (win) {
+                system("cls");
+                printf("\n=== WIN! ===\n");
+                printf("You find all mines on shield!\n\n");
+                PrintField(display_field, rows, cols, 1);
+            }
+        }
+        else {
+            printf("Use Enter to continue..\n");
+            ClearInput();
+            getchar();
+        }
     }
 
-#ifdef DEBUG
-    printf("DEBUG MODE ONLY \n");
-    PrintMassive(massive, rows, cols);
-#endif
-    FreeMassive(massive, rows);
-    FreeMassive(Fmassive, rows);
+    ClearField(mine_field, rows);
+    ClearField(display_field, rows);
+    ClearField(state_field, rows);
+    ClearInput();
+    getchar();
+
     return 0;
 }
-int MakeStep(int rows, int cols, int user_row, int user_cols, int user_command, char** reveal, char** massive, char** Fmassive) {
-    if (IsValidCell(rows, cols, user_row, user_cols) == 0) {
-        printf("Wrong input!Try again\n");
-        system("pause");
-        return 0;
-    }
-    if (massive[user_row, user_cols] != 'X' && reveal[user_row, user_cols] != '1') {
-        reveal[user_row, user_cols] = '1';
-        Fmassive[user_row, user_cols] = massive[user_row, user_cols];
-        PrintMassive(Fmassive, rows, cols);
-    }
-}
-char** CreateMassive(int rows, int cols, int MinesCount) {
-    char** massive = (char**)malloc(rows * sizeof(char*));
-    for (int i = 0; i < rows; i++) {
-        massive[i] = (char*)malloc(cols * sizeof(char));
-    }
-    srand(time(NULL));
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            massive[i][j] = '-';
+void RecursiveReveal(char** mine_field, char** display_field, char** state_field, int rows, int cols, int row, int col) {
+
+    if (!IsValidCell(row, col, rows, cols)) {
+        return;
+    }
+
+    if (state_field[row][col] == '1' || state_field[row][col] == 'F') {
+        return;
+    }
+
+    state_field[row][col] = '1';
+    display_field[row][col] = mine_field[row][col];
+
+    if (mine_field[row][col] == 'X') {
+        return;
+    }
+
+    if (mine_field[row][col] == '0') {
+        for (int di = -1; di <= 1; di++) {
+            for (int dj = -1; dj <= 1; dj++) {
+                if (di == 0 && dj == 0) {
+                    continue;
+                }
+
+                int new_row = row + di;
+                int new_col = col + dj;
+
+                RecursiveReveal(mine_field, display_field, state_field,
+                    rows, cols, new_row, new_col);
+            }
         }
     }
-
-    int mines_placed = 0;
-    while (mines_placed < MinesCount) {
-        int rand_i = rand() % rows;
-        int rand_j = rand() % cols;
-
-        if (massive[rand_i][rand_j] == '-') {
-            massive[rand_i][rand_j] = 'X';
-            mines_placed++;
-        }
-    }
-
-    return massive;
 }
 
-char** CreateRevealMassive(int rows, int cols) {
-    char** reveal = (char**)malloc(rows * sizeof(char*));
-    for (int i = 0; i < rows; i++) {
-        reveal[i] = (char*)malloc(cols * sizeof(char));
-    }
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            reveal[i][j] = '0';
-        }
-    }
-    return reveal;
-}
-
-char** CreateFalseMassive(int rows, int cols) {
-    char** Fmassive = (char**)malloc(rows * sizeof(char*));
-    for (int i = 0; i < rows; i++) {
-        Fmassive[i] = (char*)malloc(cols * sizeof(char));
-    }
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            Fmassive[i][j] = 'X';  
-        }
-    }
-    return Fmassive;
-}
-
-void Shuffle2nd(char** matrix, int rows, int cols) {
-    srand(time(NULL));
-    for (int i = 0; i < rows * cols; i++) {
-        int rand_i = rand() % rows;
-        int rand_j = rand() % cols;
-        int curr_i = i / cols;
-        int curr_j = i % cols;
-
-        char temp = matrix[curr_i][curr_j];
-        matrix[curr_i][curr_j] = matrix[rand_i][rand_j];
-        matrix[rand_i][rand_j] = temp;
-    }
-}
-
-void PrintMassive(char** matrix, int rows, int cols) {
-    printf("  ");
-    for (int j = 0; j < cols; j++) {
-        printf("%d ", j+1);
-    }
-    printf("\n");
-
-    for (int i = 0; i < rows; i++) {
-        printf("%d ", i+1);
-        for (int j = 0; j < cols; j++) {
-            printf("%c ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
-void FreeMassive(char** matrix, int rows) {
-    for (int i = 0; i < rows; i++) {
-        free(matrix[i]);
-    }
-    free(matrix);
-}
-
-int IsValidCell(int i, int j, int rows, int cols) {
-    return (i >= 0 && i < rows && j >= 0 && j < cols);
-}
-
-int CountBombsAround(char** matrix, int i, int j, int rows, int cols) {
+int CountBombsAround(char** mine_field, int row, int col, int rows, int cols) {
     int count = 0;
 
     for (int di = -1; di <= 1; di++) {
         for (int dj = -1; dj <= 1; dj++) {
-            if (di == 0 && dj == 0) continue; 
+            if (di == 0 && dj == 0) {
+                continue;
+            }
 
-            int ni = i + di;
-            int nj = j + dj;
+            int new_row = row + di;
+            int new_col = col + dj;
 
-            if (IsValidCell(ni, nj, rows, cols) && matrix[ni][nj] == 'X') {
-                count++;
+            if (IsValidCell(new_row, new_col, rows, cols)) {
+                if (mine_field[new_row][new_col] == 'X') {
+                    count++;
+                }
             }
         }
     }
@@ -174,34 +186,218 @@ int CountBombsAround(char** matrix, int i, int j, int rows, int cols) {
     return count;
 }
 
-void CountBombs(char** matrix, int rows, int cols) {
-    char** result = (char**)malloc(rows * sizeof(char*));
+int IsValidCell(int row, int col, int rows, int cols) {
+    return (row >= 0 && row < rows && col >= 0 && col < cols);
+}
+
+int MakeMoveSapper(char** mine_field, char** display_field, char** state_field,
+    int rows, int cols, int mines_count, int* flags_count,
+    int row, int col, char command) {
+
+    int r = row - 1;
+    int c = col - 1;
+
+    switch (command) {
+    case 'O':
+        if (state_field[r][c] == '1') {
+            printf("That`s already open!\n");
+            return -1;
+        }
+
+        if (state_field[r][c] == 'F') {
+            printf("Delete Flag before do that!\n");
+            return -1;
+        }
+
+        if (mine_field[r][c] == 'X') {
+            return 1;
+        }
+
+        RecursiveReveal(mine_field, display_field, state_field, rows, cols, r, c);
+
+        return 0;
+
+    case 'F':
+        if (state_field[r][c] == '1') {
+            printf("You can`t set flag at this position!\n");
+            return -1;
+        }
+
+        if (state_field[r][c] == 'F') {
+            state_field[r][c] = '0';
+            display_field[r][c] = '.';
+            (*flags_count)--;
+            printf("Flag delete from (%d, %d)\n", row, col);
+        }
+        else {
+            state_field[r][c] = 'F';
+            display_field[r][c] = 'F';
+            (*flags_count)++;
+            printf("Flag set on (%d, %d)\n", row, col);
+        }
+
+        return 0;
+
+    default:
+        return -1;
+    }
+}
+
+char** CreateMineField(int rows, int cols, int mines_count) {
+    char** field = (char**)malloc(rows * sizeof(char*));
+    if (!field) return NULL;
+
     for (int i = 0; i < rows; i++) {
-        result[i] = (char*)malloc(cols * sizeof(char));
+        field[i] = (char*)malloc(cols * sizeof(char));
+        if (!field[i]) {
+            for (int j = 0; j < i; j++) free(field[j]);
+            free(field);
+            return NULL;
+        }
+
+        for (int j = 0; j < cols; j++) {
+            field[i][j] = '0';
+        }
+    }
+
+    return field;
+}
+
+char** CreateDisplayField(int rows, int cols) {
+
+    char** field = (char**)malloc(rows * sizeof(char*));
+
+    if (!field) return NULL;
+
+    for (int i = 0; i < rows; i++) {
+        field[i] = (char*)malloc(cols * sizeof(char));
+        if (!field[i]) {
+            for (int j = 0; j < i; j++) free(field[j]);
+            free(field);
+            return NULL;
+        }
+
+        for (int j = 0; j < cols; j++) {
+            field[i][j] = '.';
+        }
+    }
+
+    return field;
+}
+
+char** CreateStateField(int rows, int cols) {
+    char** field = (char**)malloc(rows * sizeof(char*));
+    if (!field) return NULL;
+
+    for (int i = 0; i < rows; i++) {
+        field[i] = (char*)malloc(cols * sizeof(char));
+        if (!field[i]) {
+            for (int j = 0; j < i; j++) free(field[j]);
+            free(field);
+            return NULL;
+        }
+
+        for (int j = 0; j < cols; j++) {
+            field[i][j] = '0';
+        }
+    }
+
+    return field;
+}
+
+void CreateMines(char** mine_field, int rows, int cols, int mines_count) {
+    int mines_placed = 0;
+
+    while (mines_placed < mines_count) {
+        int r = rand() % rows;
+        int c = rand() % cols;
+
+        if (mine_field[r][c] != 'X') {
+            mine_field[r][c] = 'X';
+            mines_placed++;
+        }
+    }
+}
+
+void CalculateNumbers(char** mine_field, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (mine_field[i][j] != 'X') {
+                int count = CountBombsAround(mine_field, i, j, rows, cols);
+                if (count > 0) {
+                    mine_field[i][j] = '0' + count;
+                }
+            }
+        }
+    }
+}
+
+void ClearField(char** field, int rows) {
+    if (!field) return;
+
+    for (int i = 0; i < rows; i++) {
+        free(field[i]);
+    }
+    free(field);
+}
+
+void PrintField(char** field, int rows, int cols, int show_numbers) {
+    //show_numbers - это флаг, показывать ли координаты €чейки
+    if (show_numbers) {
+        printf("   ");
+        for (int j = 0; j < cols; j++) {
+            printf("%2d ", j + 1);
+        }
+        printf("\n");
+
+        printf("   ");
+        for (int j = 0; j < cols; j++) {
+            printf("---");
+        }
+        printf("\n");
     }
 
     for (int i = 0; i < rows; i++) {
+        if (show_numbers) {
+            printf("%2d|", i + 1);
+        }
+        else {
+            printf("  |");
+        }
+
         for (int j = 0; j < cols; j++) {
-            if (matrix[i][j] == 'X') {
-                result[i][j] = 'X';
+            printf(" %c ", field[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+int CheckGameWin(char** mine_field, char** state_field,
+    int rows, int cols, int mines_count, int flags_count) {
+
+    int correctly_flagged = 0;
+    int all_safe_opened = 1;
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (mine_field[i][j] == 'X') {
+                if (state_field[i][j] == 'F') {
+                    correctly_flagged++;
+                }
             }
             else {
-                int bombCount = CountBombsAround(matrix, i, j, rows, cols);
-                if (bombCount > 0) {
-                    result[i][j] = '0' + bombCount; 
-                }
-                else {
-                    result[i][j] = '0';
+                if (state_field[i][j] != '1') {
+                    all_safe_opened = 0;
                 }
             }
         }
     }
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            matrix[i][j] = result[i][j];
-        }
-        free(result[i]);
-    }
-    free(result);
+    return (correctly_flagged == mines_count && flags_count == mines_count) || all_safe_opened;
+}
+
+void ClearInput() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
