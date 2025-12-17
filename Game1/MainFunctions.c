@@ -36,7 +36,8 @@ void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, 
             "3.Bulls and Cows\n"
             "4.MEMO\n"
             "5.Sapper\n"
-            "6.Back\n"
+            "6.TicTacToe\n"
+            "9.Back\n"
             "0.Exit\n");
         scanf_s("%d", user_choice);
         switch (*user_choice) {
@@ -59,7 +60,11 @@ void GamesMenu(int* score, int* total, int* wins, int* defeats, int* difficult, 
             break;
         case 6:
             system("cls");
-            return;
+            play_game(difficult);
+            break;
+        case 9:
+            system("cls");
+            continue;
         case 0:
             *Flag = EndProgram();
             break;

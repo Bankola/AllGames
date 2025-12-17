@@ -130,6 +130,7 @@
     <ClCompile Include="MainGame.c" />
     <ClCompile Include="MEMOGame.c" />
     <ClCompile Include="Sapper.c" />
+    <ClCompile Include="TicTacToe.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="funcs.h" />

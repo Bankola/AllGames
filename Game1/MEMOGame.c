@@ -119,7 +119,7 @@ void PrintBoard(char* board, int* revealed) {
     printf("\n+----+----+----+----+----+----+----+----+----+----+\n");
 }
 
-int CheckInfo(int* revealed) {  // Изменен тип параметра с char* на int*
+int CheckInfo(int* revealed) { 
     int card;
     while (1) {
         printf("\nSelect the card (1-10): ");
@@ -128,13 +128,13 @@ int CheckInfo(int* revealed) {  // Изменен тип параметра с char* на int*
             while (getchar() != '\n');
             continue;
         }
-        if (card < 1 || card > 10) {  // Исправлено: было card < 0
+        if (card < 1 || card > 10) {  
             printf("Input error! Enter a number between 1 and 10.\n");
             continue;  // Исправлено: был return 0
         }
         if (revealed[card - 1]) {
             printf("This card is already open! Select another one.\n");
-            continue;  // Исправлено: был return 0
+            continue; 
         }
         return card;
     }
@@ -154,14 +154,14 @@ int CheckResult(int card1, int card2, char* board, int* revealed) {
 int MakeMove(char* board, int* revealed) {
     int card1 = CheckInfo(revealed);
     if (card1 == 0) return 0;  
-    ChooseFirstCard(card1, board, revealed);
+    ChooseCard(card1, board, revealed, "The first card");
 
     int card2 = CheckInfo(revealed);
     if (card2 == 0) {
         revealed[card1 - 1] = 0;
         return 0;
     }
-    ChooseSecondCard(card1, card2, board, revealed);
+    ChooseCard(card2, board, revealed, "The second card");
 
     if (CheckResult(card1, card2, board, revealed)) {
         return 1;
@@ -171,19 +171,10 @@ int MakeMove(char* board, int* revealed) {
     }
 }
 
-void ChooseFirstCard(int card1, char* board, int* revealed) {  
-    revealed[card1 - 1] = 1;
+void ChooseCard(int card, char* board, int* revealed, char* text) {  
+    revealed[card - 1] = 1;
     ClearScreen();
-    printf("\nThe first card: %c\n", board[card1 - 1]);
-    printf("Current field:\n");
-    PrintBoard(board, revealed);
-}
-
-void ChooseSecondCard(int card1, int card2, char* board, int* revealed) {  
-    revealed[card2 - 1] = 1;
-    ClearScreen();
-    printf("\nFirst card: %c, Second card: %c\n",
-        board[card1 - 1], board[card2 - 1]);
+    printf("\n%s: %c\n", text, board[card - 1]);
     printf("Current field:\n");
     PrintBoard(board, revealed);
 }

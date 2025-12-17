@@ -33,8 +33,7 @@ int CountCows(int user_number, int computer_number);
 int StartMEMO(int* difficult);
 int CheckInfo(int card, char* revealed);
 int CheckResult(int card1, int card2, char* board, int* revealed);
-void ChooseFirstCard(int card1, char* board, char* revealed);
-void ChooseSecondCard(int card1, int card2, char* board, char* revealed);
+void ChooseCard(int card, char* board, char* revealed, char* text);
 void Shuffle(char* mass, int size);
 void InitializeBoard(char* board);
 void PrintBoard(char* board, int* revealed);
@@ -52,9 +51,30 @@ void CreateMines(char** mine_field, int rows, int cols, int mines_count);
 void CalculateNumbers(char** mine_field, int rows, int cols);
 void PrintField(char** field, int rows, int cols, int show_numbers);
 void ClearInput();
-int MakeMoveSapper(char** mine_field, char** display_field, char** state_field, int rows, int cols, int mines_count, int* flags_count, int row, int col, char command);
+int MakeMoveSapper(char** mine_field, char** display_field, char** state_field,
+    int rows, int cols, int mines_count, int* flags_count,
+    int row, int col, char command, int* TrueFlagsCount);
 void RecursiveReveal(char** mine_field, char** display_field, char** state_field, int rows, int cols, int row, int col);
-int CheckGameWin(char** mine_field, char** state_field, int rows, int cols, int mines_count, int flags_count);
+int CheckGameWin(char** mine_field, char** state_field, int rows, int cols, int mines_count, int flags_count, int TrueFlagsCount);
 int CountBombsAround(char** mine_field, int row, int col, int rows, int cols);
 int IsValidCell(int row, int col, int rows, int cols);
+
+//Крестики нолики
+void clear_screen();
+void delay(int milliseconds);
+void play_game(int* difficulty);
+void initialize_game(char*** field, char* player_char, char* computer_char, int* player_turn);
+void cleanup_game(char** field);
+int coin_toss();
+void draw_field(char** field);
+int is_valid_move(char** field, int row, int col);
+int make_move(char** field, int row, int col, char symbol);
+void make_player_move(char** field, char player_char);
+int check_win(char** field, char symbol);
+int check_draw(char** field);
+int count_empty_cells(char** field);
+int minimax(char** field, int depth, int is_maximizing, char computer_char, char player_char);
+int* find_best_move(char** field, char computer_char, char player_char);
+void make_computer_move(char** field, char computer_char, char player_char, int difficulty);
+
 #endif

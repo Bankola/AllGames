@@ -3,10 +3,11 @@
 #include <time.h>
 #include <ctype.h>
 #include "funcs.h"
-#define DEBUG
+#include "utilities.h"
+
 int StartSapper(int* difficulty) {
 
-    int rows, cols, mines_count;
+    int rows, cols, mines_count, TrueFlagsCount = 0;
 
     if (*difficulty == 2) {
         rows = 10;
@@ -23,6 +24,11 @@ int StartSapper(int* difficulty) {
         cols = 5;
         mines_count = 5;
     }
+#ifdef DEBUG
+    rows = 5;
+    cols = 5;
+    mines_count = 5;
+#endif
     char** mine_field = CreateMineField(rows, cols, mines_count);
     char** display_field = CreateDisplayField(rows, cols);
     char** state_field = CreateStateField(rows, cols);
@@ -73,7 +79,6 @@ int StartSapper(int* difficulty) {
             getchar();
             continue;
         }
-
         if (input_command != 'O' && input_command != 'F') {
             printf("\nError! Unknown command\n");
             printf("Use Enter to continue..\n");
@@ -84,7 +89,7 @@ int StartSapper(int* difficulty) {
 
         int move_result = MakeMoveSapper(mine_field, display_field, state_field,
             rows, cols, mines_count, &flags_count,
-            input_row, input_col, input_command);
+            input_row, input_col, input_command, &TrueFlagsCount);
 
         if (move_result == 1) { 
             game_over = 1;
@@ -104,7 +109,7 @@ int StartSapper(int* difficulty) {
             PrintField(display_field, rows, cols, 1);
         }
         else if (move_result == 0) { 
-            win = CheckGameWin(mine_field, state_field, rows, cols, mines_count, flags_count);
+            win = CheckGameWin(mine_field, state_field, rows, cols, mines_count, flags_count, TrueFlagsCount);
 
             if (win) {
                 system("cls");
@@ -112,6 +117,10 @@ int StartSapper(int* difficulty) {
                 printf("You find all mines on shield!\n\n");
                 PrintField(display_field, rows, cols, 1);
             }
+        }
+        else if (move_result == 3) {
+            system("pause");
+            printf("\nA lot of Flags! Max - 5\n");
         }
         else {
             printf("Use Enter to continue..\n");
@@ -192,7 +201,7 @@ int IsValidCell(int row, int col, int rows, int cols) {
 
 int MakeMoveSapper(char** mine_field, char** display_field, char** state_field,
     int rows, int cols, int mines_count, int* flags_count,
-    int row, int col, char command) {
+    int row, int col, char command, int* TrueFlagsCount) {
 
     int r = row - 1;
     int c = col - 1;
@@ -218,21 +227,30 @@ int MakeMoveSapper(char** mine_field, char** display_field, char** state_field,
         return 0;
 
     case 'F':
+        if (*flags_count >= 5 && state_field[r][c] != 'F') {
+            printf("\nError! Too many Flags! Maximum is 5\n");
+            return 3;
+        }
         if (state_field[r][c] == '1') {
             printf("You can`t set flag at this position!\n");
             return -1;
         }
-
         if (state_field[r][c] == 'F') {
             state_field[r][c] = '0';
             display_field[r][c] = '.';
             (*flags_count)--;
+            if (mine_field[r][c] == 'X') {
+                *TrueFlagsCount -= 1;
+            }
             printf("Flag delete from (%d, %d)\n", row, col);
         }
         else {
             state_field[r][c] = 'F';
             display_field[r][c] = 'F';
             (*flags_count)++;
+            if (mine_field[r][c] == 'X') {
+                *TrueFlagsCount += 1;
+            }
             printf("Flag set on (%d, %d)\n", row, col);
         }
 
@@ -374,27 +392,16 @@ void PrintField(char** field, int rows, int cols, int show_numbers) {
 }
 
 int CheckGameWin(char** mine_field, char** state_field,
-    int rows, int cols, int mines_count, int flags_count) {
+    int rows, int cols, int mines_count, int flags_count, int TrueFlagsCount) {
 
-    int correctly_flagged = 0;
-    int all_safe_opened = 1;
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (mine_field[i][j] == 'X') {
-                if (state_field[i][j] == 'F') {
-                    correctly_flagged++;
-                }
-            }
-            else {
-                if (state_field[i][j] != '1') {
-                    all_safe_opened = 0;
-                }
-            }
-        }
+    if (flags_count == TrueFlagsCount && flags_count == mines_count) {
+        return 1;
+    }
+    else {
+        return 0;
     }
 
-    return (correctly_flagged == mines_count && flags_count == mines_count) || all_safe_opened;
 }
 
 void ClearInput() {
